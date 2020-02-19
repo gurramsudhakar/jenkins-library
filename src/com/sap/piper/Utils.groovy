@@ -149,7 +149,7 @@ static String downloadSettingsFromUrl(script, String url, String targetFile = 's
     return targetFile
 }
 
-/*
+/**
  * Uses the Maven Help plugin to evaluate the given expression into the resolved values
  * that maven sees at / generates at runtime. This way, the exact Maven coordinates and
  * variables can be used.
@@ -163,5 +163,12 @@ static String evaluateFromMavenPom(Script script, String pomFileName, String pom
         defines: "-Dexpression=$pomPathExpression -DforceStdout -q",
         returnStdout: true
     )
+    if (resolvedExpression.startsWith('null object or invalid expression')) {
+        // There is no error indication (exit code or otherwise) from the
+        // 'evaluate' Maven plugin, only this output to stdout. The calling
+        // code assumes an empty string is returned when the property could
+        // not be resolved.
+        resolvedExpression = ''
+    }
     return resolvedExpression
 }
