@@ -1,0 +1,16 @@
+metadata:
+  name: checkFindbugs
+  description: Execute spotbugs plugin
+  longDescription: |
+    SpotBugs is a program which uses static analysis to look for bugs in Java code. It is free software,
+    distributed under the terms of the GNU Lesser General Public License for more information please visit https://spotbugs.github.io/
+spec:
+  inputs:
+    params:
+      - name: excludeFilterFile
+        description: Path to a [FindBugs XML exclusion file](http://findbugs.sourceforge.net/manual/filter.html) relative to the application folder.
+        type: string
+        mandatory: false
+        scope:
+          - PARAMETERS
+          - 
