@@ -27,7 +27,7 @@ func runMavenExecute(config *mavenExecuteOptions, command execRunner) (string, e
 
 	stdOut = log.Entry().Writer()
 	if config.ReturnStdout {
-		stdOutBuf := new(bytes.Buffer)
+		stdOutBuf = new(bytes.Buffer)
 		stdOut = io.MultiWriter(stdOut, stdOutBuf)
 	}
 	command.Stdout(stdOut)
