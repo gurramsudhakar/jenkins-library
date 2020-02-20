@@ -12,32 +12,26 @@ import (
 const mavenExecutable = "mvn"
 
 func mavenExecute(config mavenExecuteOptions, telemetryData *telemetry.CustomData) string {
-	var stdOut io.Writer
-	var stdOutBuf *bytes.Buffer
-
 	c := command.Command{}
-	stdOut = log.Entry().Writer()
-
-	if config.ReturnStdout {
-		stdOutBuf = new(bytes.Buffer)
-		stdOut = io.MultiWriter(log.Entry().Writer(), stdOutBuf)
-	}
-
-	c.Stdout(stdOut)
-	c.Stderr(log.Entry().Writer())
-
-	err := runMavenExecute(&config, &c)
+	output, err := runMavenExecute(&config, &c)
 	if err != nil {
 		log.Entry().WithError(err).Fatal("step execution failed")
 	}
 
-	if stdOutBuf == nil {
-		return ""
-	}
-	return string(stdOutBuf.Bytes())
+	return output
 }
 
-func runMavenExecute(config *mavenExecuteOptions, command execRunner) error {
+func runMavenExecute(config *mavenExecuteOptions, command execRunner) (string, error) {
+	var stdOutBuf *bytes.Buffer
+	var stdOut io.Writer
+
+	stdOut = log.Entry().Writer()
+	if config.ReturnStdout {
+		stdOutBuf := new(bytes.Buffer)
+		stdOut = io.MultiWriter(stdOut, stdOutBuf)
+	}
+	command.Stdout(stdOut)
+	command.Stderr(log.Entry().Writer())
 
 	parameters := []string{}
 
@@ -81,5 +75,9 @@ func runMavenExecute(config *mavenExecuteOptions, command execRunner) error {
 			Fatal("failed to execute run command")
 	}
 
-	return nil
+	if stdOutBuf == nil {
+		return "", nil
+	}
+	return string(stdOutBuf.Bytes()), nil
+
 }

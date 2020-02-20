@@ -10,7 +10,7 @@ import (
 	"github.com/SAP/jenkins-library/pkg/command"
 )
 
-func TestMavenExecute(t *testing.T) {
+func TestRunMavenExecute(t *testing.T) {
 	t.Run("maven version", func(t *testing.T) {
 		opts := mavenExecuteOptions{}
 		c := command.Command{}
@@ -24,11 +24,20 @@ func TestMavenExecute(t *testing.T) {
 
 		stdOut := io.MultiWriter(outfile, stdOutBuf)
 		c.Stdout(stdOut)
-		err = runMavenExecute(&opts, &c)
+		_, err = runMavenExecute(&opts, &c)
 		if err != nil {
 			fmt.Printf("error: %v", err)
 		}
 		t.Logf("my buffer: %v", string(stdOutBuf.Bytes()))
+
+	})
+}
+
+func TestMavenExecute(t *testing.T) {
+	t.Run("mavenExecute should return stdOut", func(t *testing.T) {
+		expectedOutput := "mocked output"
+
+		e := execMockRunner{}
 
 	})
 }
