@@ -11,8 +11,8 @@ import (
 )
 
  type myWriter struct (
-	func Write(p []byte)  {
-
+	func Write(p []byte)  (n int, err error) {
+		return
 	}
 )
 
